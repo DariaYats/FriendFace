@@ -8,14 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var viewModel = UserViewModel()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                ForEach(viewModel.users) { user in
+                    NavigationLink(destination: DetailUserView(user: user)) {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(user.name)
+                                    .font(.headline)
+                                Text(user.company)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            Spacer()
+                            Circle()
+                                .fill(user.isActive ? .green : .gray)
+                                .frame(width: 12, height: 12)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("FriendFace")
+            .task {
+                await viewModel.fetchUsers()
+            }
         }
-        .padding()
     }
 }
 
