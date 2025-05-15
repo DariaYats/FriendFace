@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct Friend: Codable, Identifiable {
+    let id: String
+    let name: String
+}
